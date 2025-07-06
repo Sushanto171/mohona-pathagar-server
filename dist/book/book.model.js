@@ -40,5 +40,14 @@ const bookSchema = new mongoose_1.Schema({
         min: [0, "Copies must be a positive number"],
     },
     available: { type: Boolean, default: true },
+}, {
+    versionKey: false,
+    timestamps: true,
+});
+bookSchema.static("_idIsValid", function (id) {
+    const isValid = mongoose_1.Types.ObjectId.isValid(id);
+    if (!isValid)
+        throw Error("BookId Is Invalid");
+    return isValid;
 });
 exports.Book = (0, mongoose_1.model)("Book", bookSchema);

@@ -10,20 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBookById = exports.updataBookById = exports.createBook = exports.getBooks = exports.getBookByID = void 0;
-const mongoose_1 = require("mongoose");
 const book_model_1 = require("./book.model");
 // get book by id
 const getBookByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const bookId = req.params.id;
-        if (!bookId)
-            throw Error("Book Id is required");
-        if (!mongoose_1.Types.ObjectId.isValid(bookId))
-            throw Error("Invalid book id");
+        const bookId = req.params.bookId;
+        book_model_1.Book._idIsValid(bookId);
         const book = yield book_model_1.Book.findById(bookId);
         res.status(200).json({
             success: true,
-            message: "Successfully retrieved books",
+            message: "Successfully retrieved book",
             book,
         });
     }
@@ -35,7 +31,22 @@ exports.getBookByID = getBookByID;
 // get books
 const getBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const books = yield book_model_1.Book.find();
+        const { filter, sortBy, sort, limit } = req.query;
+        const limitNum = limit && typeof limit === "string" ? parseInt(limit) : 10;
+        let books;
+        if (filter && sortBy && sort) {
+            books = yield book_model_1.Book.find({ genre: filter })
+                .sort({
+                [sortBy]: sort === "ascending" || sort === "asc" || sort === "1" ? 1 : -1,
+            })
+                .limit(limitNum);
+        }
+        else if (filter) {
+            books = yield book_model_1.Book.find({ genre: filter }).limit(limitNum);
+        }
+        else {
+            books = yield book_model_1.Book.find().limit(limitNum);
+        }
         res.status(200).json({
             success: true,
             message: "Successfully retrieved books",
@@ -51,10 +62,12 @@ exports.getBooks = getBooks;
 const createBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
+        if (!body)
+            throw Error("Invalid books data");
         const book = yield book_model_1.Book.create(body);
         res.status(200).json({
             success: true,
-            message: "Successfully retrieved books",
+            message: "Successfully created the book",
             book,
         });
     }
@@ -66,15 +79,18 @@ exports.createBook = createBook;
 // update a book by id
 const updataBookById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const bookId = req.params.id;
-        if (!bookId)
-            throw Error("Book Id is required");
-        if (!mongoose_1.Types.ObjectId.isValid(bookId))
-            throw Error("Invalid book id");
-        const book = yield book_model_1.Book.findById(bookId);
+        const bookId = req.params.bookId;
+        const body = req.body;
+        if (!body)
+            throw Error("Payload is invalid");
+        book_model_1.Book._idIsValid(bookId);
+        const book = yield book_model_1.Book.findByIdAndUpdate(bookId, body, {
+            new: true,
+            runValidators: true,
+        });
         res.status(200).json({
             success: true,
-            message: "Successfully retrieved books",
+            message: "Successfully updated the book",
             book,
         });
     }
@@ -86,15 +102,12 @@ exports.updataBookById = updataBookById;
 //  delete a book by id
 const deleteBookById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const bookId = req.params.id;
-        if (!bookId)
-            throw Error("Book Id is required");
-        if (!mongoose_1.Types.ObjectId.isValid(bookId))
-            throw Error("Invalid book id");
-        const book = yield book_model_1.Book.findById(bookId);
+        const bookId = req.params.bookId;
+        book_model_1.Book._idIsValid(bookId);
+        const book = yield book_model_1.Book.findByIdAndDelete(bookId);
         res.status(200).json({
             success: true,
-            message: "Successfully retrieved books",
+            message: "Successfully deleted this book",
             book,
         });
     }

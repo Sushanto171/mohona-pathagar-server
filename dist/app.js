@@ -23,8 +23,7 @@ exports.app.use((req, res, next) => {
 });
 // global error handler
 exports.app.use((err, req, res, next) => {
-    console.log(err);
-    console.log("rout not");
+    // console.log(err);
     res.json({
         success: false,
         message: err.message,

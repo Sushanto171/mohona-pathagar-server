@@ -10,7 +10,7 @@ import {
 export const bookRoutes = Router();
 
 bookRoutes.get("/", getBooks);
-bookRoutes.get("/:id", getBookByID);
+bookRoutes.get("/:bookId", getBookByID);
 bookRoutes.post("/", createBook);
-bookRoutes.patch("/:id", updataBookById);
-bookRoutes.delete("/", deleteBookById);
+bookRoutes.put("/:bookId", updataBookById);
+bookRoutes.delete("/:bookId", deleteBookById);

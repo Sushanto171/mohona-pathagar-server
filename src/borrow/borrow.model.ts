@@ -1,0 +1,50 @@
+import { model, Schema } from "mongoose";
+import { IBook } from "../book/book.interfaces";
+import { Book } from "../book/book.model";
+import { BorrowStaticMethod, IBorrow } from "./borrow.interfaces";
+// book (objectId) — Mandatory. References the borrowed book’s ID.
+// quantity (number) — Mandatory. Positive integer representing the number of copies borrowed.
+// dueDate (date) — Mandatory. The date by which the book must be returned.
+const borrowSchema = new Schema<IBorrow>(
+  {
+    book: { type: Schema.Types.ObjectId, required: true, ref: "Book" },
+    quantity: { type: Number, min: 0, required: true },
+    dueDate: { type: String, required: true },
+  },
+  {
+    versionKey: false,
+    timestamps: true,
+  }
+);
+
+borrowSchema.static("checkCopies", async function (bookId, quantity: number) {
+  // step -1: Check bookId and quantity
+  Book._idIsValid(bookId);
+  if (isNaN(quantity)) throw Error("Invalid quantity");
+  // // step-2: find book by id
+  let book: IBook | null = await Book.findById(bookId);
+
+  // // step -3: Is book is null .then return
+  if (!book) throw Error("Book Found null");
+  // // step-4 : check copies
+  if (book.copies >= quantity) {
+    book.copies = book.copies - quantity;
+    if (book.copies === 0) {
+      book.available = false;
+      console.log(book);
+    }
+    //   //step-5 modify actual book
+    const result = await Book.findByIdAndUpdate(bookId, book, {
+      new: true,
+      runValidators: true,
+    });
+    console.log({ result });
+  } else {
+    throw Error("Insufficient Number of Copies");
+  }
+});
+
+export const Borrow = model<IBorrow, BorrowStaticMethod>(
+  "Borrow",
+  borrowSchema
+);
