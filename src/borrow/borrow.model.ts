@@ -7,9 +7,20 @@ import { BorrowStaticMethod, IBorrow } from "./borrow.interfaces";
 // dueDate (date) — Mandatory. The date by which the book must be returned.
 const borrowSchema = new Schema<IBorrow>(
   {
-    book: { type: Schema.Types.ObjectId, required: true, ref: "Book" },
-    quantity: { type: Number, min: 0, required: true },
-    dueDate: { type: String, required: true },
+    book: {
+      type: Schema.Types.ObjectId,
+      required: [true, "bookId is required. Please provide a bookId."],
+      ref: "Book",
+    },
+    quantity: {
+      type: Number,
+      min: 0,
+      required: [true, "Quantity is required. Please provide a quantity."],
+    },
+    dueDate: {
+      type: Date,
+      required: [true, "dutDate is required. Please provide a dueDate."],
+    },
   },
   {
     versionKey: false,
@@ -31,14 +42,12 @@ borrowSchema.static("checkCopies", async function (bookId, quantity: number) {
     book.copies = book.copies - quantity;
     if (book.copies === 0) {
       book.available = false;
-      console.log(book);
     }
     //   //step-5 modify actual book
-    const result = await Book.findByIdAndUpdate(bookId, book, {
+    await Book.findByIdAndUpdate(bookId, book, {
       new: true,
       runValidators: true,
     });
-    console.log({ result });
   } else {
     throw Error("Insufficient Number of Copies");
   }

@@ -16,9 +16,20 @@ const book_model_1 = require("../book/book.model");
 // quantity (number) — Mandatory. Positive integer representing the number of copies borrowed.
 // dueDate (date) — Mandatory. The date by which the book must be returned.
 const borrowSchema = new mongoose_1.Schema({
-    book: { type: mongoose_1.Schema.Types.ObjectId, required: true, ref: "Book" },
-    quantity: { type: Number, min: 0, required: true },
-    dueDate: { type: String, required: true },
+    book: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        required: [true, "bookId is required. Please provide a bookId."],
+        ref: "Book",
+    },
+    quantity: {
+        type: Number,
+        min: 0,
+        required: [true, "Quantity is required. Please provide a quantity."],
+    },
+    dueDate: {
+        type: Date,
+        required: [true, "dutDate is required. Please provide a dueDate."],
+    },
 }, {
     versionKey: false,
     timestamps: true,
@@ -39,14 +50,12 @@ borrowSchema.static("checkCopies", function (bookId, quantity) {
             book.copies = book.copies - quantity;
             if (book.copies === 0) {
                 book.available = false;
-                console.log(book);
             }
             //   //step-5 modify actual book
-            const result = yield book_model_1.Book.findByIdAndUpdate(bookId, book, {
+            yield book_model_1.Book.findByIdAndUpdate(bookId, book, {
                 new: true,
                 runValidators: true,
             });
-            console.log({ result });
         }
         else {
             throw Error("Insufficient Number of Copies");

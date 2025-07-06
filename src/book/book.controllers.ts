@@ -10,7 +10,7 @@ export const getBookByID = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Successfully retrieved book",
-      book,
+      data: book,
     });
   } catch (error) {
     throw error;
@@ -42,7 +42,7 @@ export const getBooks = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Successfully retrieved books",
-      books,
+      data: books,
     });
   } catch (error) {
     throw error;
@@ -58,7 +58,7 @@ export const createBook = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Successfully created the book",
-      book,
+      data: book,
     });
   } catch (error) {
     throw error;
@@ -79,7 +79,7 @@ export const updataBookById = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Successfully updated the book",
-      book,
+      data: book,
     });
   } catch (error) {
     throw error;
@@ -95,7 +95,7 @@ export const deleteBookById = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Successfully deleted this book",
-      book,
+      data: book,
     });
   } catch (error) {
     throw error;

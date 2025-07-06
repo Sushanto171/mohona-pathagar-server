@@ -8,8 +8,51 @@ export const createBorrow = async (req: Request, res: Response) => {
     const borrow = await Borrow.create(body);
     res.status(201).json({
       success: true,
-      message: "A Borrow Successfully created",
-      borrow,
+      message: "Book borrowed successfully",
+      data: borrow,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getBorrowsSummery = async (req: Request, res: Response) => {
+  try {
+    const borrows = await Borrow.aggregate([
+      {
+        $group: {
+          _id: "$book",
+          totalQuantity: { $sum: "$quantity" },
+          book: { $first: "$book" },
+        },
+      },
+      {
+        $lookup: {
+          as: "book",
+          from: "books",
+          localField: "book",
+          foreignField: "_id",
+        },
+      },
+      {
+        $unwind: "$book",
+      },
+      {
+        $project:{
+          _id:0,
+          totalQuantity:1,
+          book:{
+            title:1,
+            isbn:1
+          }
+        }
+      }
+    ]);
+
+    res.status(200).json({
+      success: true,
+      message: "Borrowed books summary retrieved successfully",
+      data: borrows,
     });
   } catch (error) {
     throw error;

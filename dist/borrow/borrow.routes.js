@@ -4,4 +4,5 @@ exports.borrowRoutes = void 0;
 const express_1 = require("express");
 const borrow_controllers_1 = require("./borrow.controllers");
 exports.borrowRoutes = (0, express_1.Router)();
+exports.borrowRoutes.get("/", borrow_controllers_1.getBorrowsSummery);
 exports.borrowRoutes.post("/", borrow_controllers_1.createBorrow);

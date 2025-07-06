@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { createBorrow } from "./borrow.controllers";
+import { createBorrow, getBorrowsSummery } from "./borrow.controllers";
 
 export const borrowRoutes = Router();
 
+borrowRoutes.get("/", getBorrowsSummery);
 borrowRoutes.post("/", createBorrow);

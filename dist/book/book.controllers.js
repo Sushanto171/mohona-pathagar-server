@@ -20,7 +20,7 @@ const getBookByID = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(200).json({
             success: true,
             message: "Successfully retrieved book",
-            book,
+            data: book,
         });
     }
     catch (error) {
@@ -50,7 +50,7 @@ const getBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(200).json({
             success: true,
             message: "Successfully retrieved books",
-            books,
+            data: books,
         });
     }
     catch (error) {
@@ -68,7 +68,7 @@ const createBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(200).json({
             success: true,
             message: "Successfully created the book",
-            book,
+            data: book,
         });
     }
     catch (error) {
@@ -91,7 +91,7 @@ const updataBookById = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(200).json({
             success: true,
             message: "Successfully updated the book",
-            book,
+            data: book,
         });
     }
     catch (error) {
@@ -108,7 +108,7 @@ const deleteBookById = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(200).json({
             success: true,
             message: "Successfully deleted this book",
-            book,
+            data: book,
         });
     }
     catch (error) {

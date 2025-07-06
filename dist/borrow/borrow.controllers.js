@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createBorrow = void 0;
+exports.getBorrowsSummery = exports.createBorrow = void 0;
 const borrow_model_1 = require("./borrow.model");
 const createBorrow = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -18,8 +18,8 @@ const createBorrow = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const borrow = yield borrow_model_1.Borrow.create(body);
         res.status(201).json({
             success: true,
-            message: "A Borrow Successfully created",
-            borrow,
+            message: "Book borrowed successfully",
+            data: borrow,
         });
     }
     catch (error) {
@@ -27,3 +27,46 @@ const createBorrow = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.createBorrow = createBorrow;
+const getBorrowsSummery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const borrows = yield borrow_model_1.Borrow.aggregate([
+            {
+                $group: {
+                    _id: "$book",
+                    totalQuantity: { $sum: "$quantity" },
+                    book: { $first: "$book" },
+                },
+            },
+            {
+                $lookup: {
+                    as: "book",
+                    from: "books",
+                    localField: "book",
+                    foreignField: "_id",
+                },
+            },
+            {
+                $unwind: "$book",
+            },
+            {
+                $project: {
+                    _id: 0,
+                    totalQuantity: 1,
+                    book: {
+                        title: 1,
+                        isbn: 1
+                    }
+                }
+            }
+        ]);
+        res.status(200).json({
+            success: true,
+            message: "Borrowed books summary retrieved successfully",
+            data: borrows,
+        });
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.getBorrowsSummery = getBorrowsSummery;
