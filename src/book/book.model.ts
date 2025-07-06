@@ -52,4 +52,17 @@ bookSchema.static("_idIsValid", function (id) {
   if (!isValid) throw Error("BookId Is Invalid");
   return isValid;
 });
+
+bookSchema.pre("findOneAndUpdate", async function (next) {
+  const update = this.getUpdate();
+  if (!update) return next();
+  if ("copies" in update) {
+    if (update.copies <= 0) {
+      return (update.available = false);
+    } else {
+      return (update.available = true);
+    }
+  }
+  next();
+});
 export const Book = model<IBook, BookStaticMethod>("Book", bookSchema);

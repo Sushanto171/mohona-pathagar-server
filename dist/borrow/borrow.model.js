@@ -40,6 +40,8 @@ borrowSchema.static("checkCopies", function (bookId, quantity) {
         book_model_1.Book._idIsValid(bookId);
         if (isNaN(quantity))
             throw Error("Invalid quantity");
+        if (quantity <= 0)
+            throw Error("Invalid quantity");
         // // step-2: find book by id
         let book = yield book_model_1.Book.findById(bookId);
         // // step -3: Is book is null .then return

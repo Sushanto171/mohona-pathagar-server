@@ -72,7 +72,7 @@ export const updataBookById = async (req: Request, res: Response) => {
     const body = req.body;
     if (!body) throw Error("Payload is invalid");
     Book._idIsValid(bookId);
-    const book = await Book.findByIdAndUpdate(bookId, body, {
+    const book = await Book.findOneAndUpdate({_id:bookId}, body, {
       new: true,
       runValidators: true,
     });

@@ -32,6 +32,7 @@ borrowSchema.static("checkCopies", async function (bookId, quantity: number) {
   // step -1: Check bookId and quantity
   Book._idIsValid(bookId);
   if (isNaN(quantity)) throw Error("Invalid quantity");
+  if (quantity <= 0) throw Error("Invalid quantity");
   // // step-2: find book by id
   let book: IBook | null = await Book.findById(bookId);
 

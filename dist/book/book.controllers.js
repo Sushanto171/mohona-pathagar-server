@@ -84,7 +84,7 @@ const updataBookById = (req, res) => __awaiter(void 0, void 0, void 0, function*
         if (!body)
             throw Error("Payload is invalid");
         book_model_1.Book._idIsValid(bookId);
-        const book = yield book_model_1.Book.findByIdAndUpdate(bookId, body, {
+        const book = yield book_model_1.Book.findOneAndUpdate({ _id: bookId }, body, {
             new: true,
             runValidators: true,
         });
