@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Book = void 0;
 const mongoose_1 = require("mongoose");
+const borrow_model_1 = require("../borrow/borrow.model");
 const bookSchema = new mongoose_1.Schema({
     title: {
         type: String,
@@ -59,6 +60,7 @@ bookSchema.static("_idIsValid", function (id) {
         throw Error("BookId Is Invalid");
     return isValid;
 });
+// Middleware/Gourd: when book updated and is copies values >0 . update book available true
 bookSchema.pre("findOneAndUpdate", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         const update = this.getUpdate();
@@ -71,6 +73,15 @@ bookSchema.pre("findOneAndUpdate", function (next) {
             else {
                 return (update.available = true);
             }
+        }
+        next();
+    });
+});
+// Middleware/Gourd: when a book deleted. it find borrow collection and delete this book related borrow
+bookSchema.post("findOneAndDelete", function (doc, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (doc && "_id" in doc) {
+            yield borrow_model_1.Borrow.deleteMany({ book: doc._id });
         }
         next();
     });

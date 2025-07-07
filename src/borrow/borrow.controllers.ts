@@ -38,18 +38,18 @@ export const getBorrowsSummery = async (req: Request, res: Response) => {
         $unwind: "$book",
       },
       {
-        $project:{
-          _id:0,
-          totalQuantity:1,
-          book:{
-            title:1,
-            isbn:1
-          }
-        }
-      }
+        $project: {
+          _id: 0,
+          totalQuantity: 1,
+          book: {
+            title: 1,
+            isbn: 1,
+          },
+        },
+      },
     ]);
 
-    res.status(200).json({
+    res.status(borrows ? 200 : 404).json({
       success: true,
       message: "Borrowed books summary retrieved successfully",
       data: borrows,

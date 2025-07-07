@@ -17,9 +17,9 @@ const getBookByID = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const bookId = req.params.bookId;
         book_model_1.Book._idIsValid(bookId);
         const book = yield book_model_1.Book.findById(bookId);
-        res.status(200).json({
+        res.status(book ? 200 : 404).json({
             success: true,
-            message: "Successfully retrieved book",
+            message: "Book retrieved Successfully",
             data: book,
         });
     }
@@ -42,14 +42,16 @@ const getBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 .limit(limitNum);
         }
         else if (filter) {
-            books = yield book_model_1.Book.find({ genre: filter }).limit(limitNum);
+            books = yield book_model_1.Book.find({
+                genre: { $regex: filter, $options: "i" },
+            }).limit(limitNum);
         }
         else {
             books = yield book_model_1.Book.find().limit(limitNum);
         }
         res.status(200).json({
             success: true,
-            message: "Successfully retrieved books",
+            message: "Books retrieved Successfully",
             data: books,
         });
     }
@@ -67,7 +69,7 @@ const createBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const book = yield book_model_1.Book.create(body);
         res.status(200).json({
             success: true,
-            message: "Successfully created the book",
+            message: "Book created successfully.",
             data: book,
         });
     }
@@ -88,9 +90,9 @@ const updataBookById = (req, res) => __awaiter(void 0, void 0, void 0, function*
             new: true,
             runValidators: true,
         });
-        res.status(200).json({
+        res.status(book ? 200 : 404).json({
             success: true,
-            message: "Successfully updated the book",
+            message: "Book updated successfully",
             data: book,
         });
     }
@@ -104,10 +106,10 @@ const deleteBookById = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const bookId = req.params.bookId;
         book_model_1.Book._idIsValid(bookId);
-        const book = yield book_model_1.Book.findByIdAndDelete(bookId);
-        res.status(200).json({
+        const book = yield book_model_1.Book.findOneAndDelete({ _id: bookId });
+        res.status(book ? 200 : 404).json({
             success: true,
-            message: "Successfully deleted this book",
+            message: "Book deleted successfully",
             data: book,
         });
     }

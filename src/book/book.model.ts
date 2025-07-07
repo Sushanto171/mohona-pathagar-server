@@ -1,4 +1,6 @@
 import { model, Schema, Types } from "mongoose";
+import { IBorrow } from "../borrow/borrow.interfaces";
+import { Borrow } from "../borrow/borrow.model";
 import { BookStaticMethod, IBook } from "./book.interfaces";
 
 const bookSchema = new Schema<IBook, BookStaticMethod>(
@@ -53,6 +55,7 @@ bookSchema.static("_idIsValid", function (id) {
   return isValid;
 });
 
+// Middleware/Gourd: when book updated and is copies values >0 . update book available true
 bookSchema.pre("findOneAndUpdate", async function (next) {
   const update = this.getUpdate();
   if (!update) return next();
@@ -65,4 +68,13 @@ bookSchema.pre("findOneAndUpdate", async function (next) {
   }
   next();
 });
+
+// Middleware/Gourd: when a book deleted. it find borrow collection and delete this book related borrow
+bookSchema.post<IBorrow>("findOneAndDelete", async function (doc, next) {
+  if (doc && "_id" in doc) {
+    await Borrow.deleteMany({ book: doc._id });
+  }
+  next();
+});
+
 export const Book = model<IBook, BookStaticMethod>("Book", bookSchema);

@@ -7,9 +7,9 @@ export const getBookByID = async (req: Request, res: Response) => {
     const bookId = req.params.bookId;
     Book._idIsValid(bookId);
     const book = await Book.findById(bookId);
-    res.status(200).json({
+    res.status(book ? 200 : 404).json({
       success: true,
-      message: "Successfully retrieved book",
+      message: "Book retrieved Successfully",
       data: book,
     });
   } catch (error) {
@@ -35,13 +35,15 @@ export const getBooks = async (req: Request, res: Response) => {
         })
         .limit(limitNum);
     } else if (filter) {
-      books = await Book.find({ genre: filter }).limit(limitNum);
+      books = await Book.find({
+        genre: { $regex: filter, $options: "i" },
+      }).limit(limitNum);
     } else {
       books = await Book.find().limit(limitNum);
     }
     res.status(200).json({
       success: true,
-      message: "Successfully retrieved books",
+      message: "Books retrieved Successfully",
       data: books,
     });
   } catch (error) {
@@ -57,7 +59,7 @@ export const createBook = async (req: Request, res: Response) => {
     const book = await Book.create(body);
     res.status(200).json({
       success: true,
-      message: "Successfully created the book",
+      message: "Book created successfully.",
       data: book,
     });
   } catch (error) {
@@ -72,13 +74,13 @@ export const updataBookById = async (req: Request, res: Response) => {
     const body = req.body;
     if (!body) throw Error("Payload is invalid");
     Book._idIsValid(bookId);
-    const book = await Book.findOneAndUpdate({_id:bookId}, body, {
+    const book = await Book.findOneAndUpdate({ _id: bookId }, body, {
       new: true,
       runValidators: true,
     });
-    res.status(200).json({
+    res.status(book ? 200 : 404).json({
       success: true,
-      message: "Successfully updated the book",
+      message: "Book updated successfully",
       data: book,
     });
   } catch (error) {
@@ -91,10 +93,10 @@ export const deleteBookById = async (req: Request, res: Response) => {
   try {
     const bookId = req.params.bookId;
     Book._idIsValid(bookId);
-    const book = await Book.findByIdAndDelete(bookId);
-    res.status(200).json({
+    const book = await Book.findOneAndDelete({ _id: bookId });
+    res.status(book ? 200 : 404).json({
       success: true,
-      message: "Successfully deleted this book",
+      message: "Book deleted successfully",
       data: book,
     });
   } catch (error) {
