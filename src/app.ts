@@ -22,7 +22,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // global error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  // console.log(err);
 
   res.json({
     success: false,
