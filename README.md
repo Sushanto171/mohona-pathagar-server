@@ -1,4 +1,3 @@
-
 # 📚 Mohona Pathagar - Library Management API
 
 A Library Management REST API built with **Express**, **TypeScript**, and **MongoDB (Mongoose)**. This project allows managing book inventories, borrowing records, and provides flexible filtering and summary features.
@@ -45,7 +44,7 @@ src/
 │   └── borrow.routes.ts          # Borrow API route definitions
 │
 ├── config/
-│   └── index.ts                     # import env variables
+│   └── index.ts                  # import env variables
 │
 ├── routes/
 │   └── index.ts                  # Combines all routes
@@ -59,26 +58,29 @@ src/
 ## 📦 Installation & Setup
 
 1. Clone the repo:
-    ```bash
-    git clone https://github.com/Sushanto171/mohona-pathagar-server.git
-    cd mohona-pathagar
-    ```
+
+   ```bash
+   git clone https://github.com/Sushanto171/mohona-pathagar-server.git
+   cd mohona-pathagar
+   ```
 
 2. Install dependencies:
-    ```bash
-    npm install
-    ```
+
+   ```bash
+   npm install
+   ```
 
 3. Set environment variables in a `.env` file:
-    ```
-    PORT=5000
-    DATABASE_URL=your_mongodb_connection_string
-    ```
+
+   ```
+   PORT=5000
+   DATABASE_URL=your_mongodb_connection_string
+   ```
 
 4. Run the development server:
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
 ---
 
@@ -95,20 +97,20 @@ You can use tools like **Postman** or **Thunder Client** to test the endpoints.
 
 ### 📘 Book Endpoints
 
-| Method | Endpoint              | Description                  |
-|--------|-----------------------|------------------------------|
-| POST   | `/api/books`          | Create a new book            |
-| GET    | `/api/books`          | Get all books (with filters) |
-| GET    | `/api/books/:bookId`  | Get book by ID               |
-| PUT    | `/api/books/:bookId`  | Update book                  |
-| DELETE | `/api/books/:bookId`  | Delete book                  |
+| Method | Endpoint             | Description                  |
+| ------ | -------------------- | ---------------------------- |
+| POST   | `/api/books`         | Create a new book            |
+| GET    | `/api/books`         | Get all books (with filters) |
+| GET    | `/api/books/:bookId` | Get book by ID               |
+| PUT    | `/api/books/:bookId` | Update book                  |
+| DELETE | `/api/books/:bookId` | Delete book                  |
 
 ### 📕 Borrow Endpoints
 
-| Method | Endpoint     | Description                     |
-|--------|--------------|---------------------------------|
-| POST   | `/api/borrow`| Borrow a book                   |
-| GET    | `/api/borrow`| Get summary of borrowed books   |
+| Method | Endpoint      | Description                   |
+| ------ | ------------- | ----------------------------- |
+| POST   | `/api/borrow` | Borrow a book                 |
+| GET    | `/api/borrow` | Get summary of borrowed books |
 
 ---
 
@@ -119,8 +121,8 @@ You can use tools like **Postman** or **Thunder Client** to test the endpoints.
 
 ---
 
-
 ## 🧑‍💻 Author
 
 **Sushanto Kumar**  
 GitHub: [https://github.com/Sushanto171](https://github.com/Sushanto171)
+Linkedin: [https://www.linkedin.com/in/sushanto-kumar171](https://www.linkedin.com/in/sushanto-kumar171)
