@@ -9,7 +9,9 @@ const express_1 = __importDefault(require("express"));
 const routes_1 = require("./routes");
 exports.app = (0, express_1.default)();
 exports.app.use(express_1.default.json());
-exports.app.use((0, cors_1.default)());
+exports.app.use((0, cors_1.default)({
+    origin: ["https://mohona-pathagar.vercel.app", "http://localhost:5173"],
+}));
 exports.app.use("/api/", routes_1.router);
 exports.app.get("/", (req, res) => {
     res.json({ success: true, message: "Hello World...." });
@@ -23,7 +25,7 @@ exports.app.use((req, res, next) => {
 });
 // global error handler
 exports.app.use((err, req, res, next) => {
-    res.json({
+    res.status(500).json({
         success: false,
         message: err.message,
         error: err,

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteBookById = exports.updataBookById = exports.createBook = exports.getBooks = exports.getBookByID = void 0;
+exports.deleteBookById = exports.updataBookById = exports.createBook = exports.countBookNumber = exports.getBooks = exports.getBookByID = void 0;
 const book_model_1 = require("./book.model");
 // get book by id
 const getBookByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -31,23 +31,34 @@ exports.getBookByID = getBookByID;
 // get books
 const getBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { filter, sortBy, sort, limit } = req.query;
-        const limitNum = limit && typeof limit === "string" ? parseInt(limit) : 10;
+        const { filter, sortBy, sort, limit, page } = req.query;
+        const limitNum = limit ? parseInt(limit) : 10;
+        const pageNum = parseInt(page) - 1;
+        const skip = pageNum * limitNum;
         let books;
         if (filter && sortBy && sort) {
             books = yield book_model_1.Book.find({ genre: filter })
+                .select("-updatedAt -description -createdAt")
                 .sort({
                 [sortBy]: sort === "ascending" || sort === "asc" || sort === "1" ? 1 : -1,
             })
+                .skip(skip)
                 .limit(limitNum);
         }
         else if (filter) {
             books = yield book_model_1.Book.find({
                 genre: { $regex: filter, $options: "i" },
-            }).limit(limitNum);
+            })
+                .select("-updatedAt -description -createdAt")
+                .skip(skip)
+                .limit(limitNum);
         }
         else {
-            books = yield book_model_1.Book.find().limit(limitNum);
+            books = yield book_model_1.Book.find()
+                .select("-updatedAt -description ")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limitNum);
         }
         res.status(200).json({
             success: true,
@@ -60,6 +71,17 @@ const getBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getBooks = getBooks;
+// get count books number
+const countBookNumber = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const count = yield book_model_1.Book.estimatedDocumentCount();
+        res.status(200).json({ count });
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.countBookNumber = countBookNumber;
 // create a book
 const createBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

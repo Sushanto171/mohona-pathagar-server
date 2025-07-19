@@ -20,12 +20,17 @@ export const getBorrowsSummery = async (req: Request, res: Response) => {
   try {
     const borrows = await Borrow.aggregate([
       {
+        $sort: { createdAt: -1 },
+      },
+      {
         $group: {
           _id: "$book",
           totalQuantity: { $sum: "$quantity" },
           book: { $first: "$book" },
+          latestAddBorrow: { $first: "$createdAt" },
         },
       },
+
       {
         $lookup: {
           as: "book",
@@ -37,15 +42,21 @@ export const getBorrowsSummery = async (req: Request, res: Response) => {
       {
         $unwind: "$book",
       },
+
       {
         $project: {
           _id: 0,
           totalQuantity: 1,
+          latestAddBorrow: 1,
           book: {
+            _id:1,
             title: 1,
             isbn: 1,
           },
         },
+      },
+      {
+        $sort: { latestAddBorrow: -1 },
       },
     ]);
 

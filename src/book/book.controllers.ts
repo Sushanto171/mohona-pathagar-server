@@ -20,32 +20,50 @@ export const getBookByID = async (req: Request, res: Response) => {
 // get books
 export const getBooks = async (req: Request, res: Response) => {
   try {
-    const { filter, sortBy, sort, limit } = req.query;
-
-    const limitNum: number =
-      limit && typeof limit === "string" ? parseInt(limit) : 10;
-
+    const { filter, sortBy, sort, limit, page } = req.query;
+    const limitNum = limit ? parseInt(limit as string) : 10;
+    const pageNum = parseInt(page as string) - 1;
+    const skip = pageNum * limitNum;
     let books;
 
     if (filter && sortBy && sort) {
       books = await Book.find({ genre: filter })
+        .select("-updatedAt -description -createdAt")
         .sort({
           [sortBy as string]:
             sort === "ascending" || sort === "asc" || sort === "1" ? 1 : -1,
         })
+        .skip(skip)
         .limit(limitNum);
     } else if (filter) {
       books = await Book.find({
         genre: { $regex: filter, $options: "i" },
-      }).limit(limitNum);
+      })
+        .select("-updatedAt -description -createdAt")
+        .skip(skip)
+        .limit(limitNum);
     } else {
-      books = await Book.find().limit(limitNum);
+      books = await Book.find()
+        .select("-updatedAt -description ")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limitNum);
     }
     res.status(200).json({
       success: true,
       message: "Books retrieved Successfully",
       data: books,
     });
+  } catch (error) {
+    throw error;
+  }
+};
+
+// get count books number
+export const countBookNumber = async (req: Request, res: Response) => {
+  try {
+    const count = await Book.estimatedDocumentCount();
+    res.status(200).json({ count });
   } catch (error) {
     throw error;
   }

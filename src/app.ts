@@ -4,7 +4,11 @@ import { router } from "./routes";
 export const app: Application = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://mohona-pathagar.vercel.app", "http://localhost:5173"],
+  })
+);
 app.use("/api/", router);
 
 app.get("/", (req: Request, res: Response) => {
@@ -19,11 +23,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-
 // global error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-
-  res.json({
+  res.status(500).json({
     success: false,
     message: err.message,
     error: err,

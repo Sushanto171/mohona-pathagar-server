@@ -31,10 +31,14 @@ const getBorrowsSummery = (req, res) => __awaiter(void 0, void 0, void 0, functi
     try {
         const borrows = yield borrow_model_1.Borrow.aggregate([
             {
+                $sort: { createdAt: -1 },
+            },
+            {
                 $group: {
                     _id: "$book",
                     totalQuantity: { $sum: "$quantity" },
                     book: { $first: "$book" },
+                    latestAddBorrow: { $first: "$createdAt" },
                 },
             },
             {
@@ -52,11 +56,16 @@ const getBorrowsSummery = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 $project: {
                     _id: 0,
                     totalQuantity: 1,
+                    latestAddBorrow: 1,
                     book: {
+                        _id: 1,
                         title: 1,
                         isbn: 1,
                     },
                 },
+            },
+            {
+                $sort: { latestAddBorrow: -1 },
             },
         ]);
         res.status(borrows ? 200 : 404).json({
