@@ -1,6 +1,8 @@
 import cors from "cors";
-import express, { Application, NextFunction, Request, Response } from "express";
-import { router } from "./routes";
+import express, { Application, Request, Response } from "express";
+import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
+import { notFOund } from "./app/middlewares/notFound";
+import { router } from "./app/routes";
 export const app: Application = express();
 
 app.use(express.json());
@@ -16,18 +18,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // global 404 route handler
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.status(404).json({
-    success: false,
-    massage: `The path '${req.path}' was not found on this server.`,
-  });
-});
+app.use(notFOund);
 
 // global error handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  res.status(500).json({
-    success: false,
-    message: err.message,
-    error: err,
-  });
-});
+app.use(globalErrorHandler);

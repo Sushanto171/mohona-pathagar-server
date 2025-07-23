@@ -38,7 +38,7 @@ const getBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         let books;
         if (filter && sortBy && sort) {
             books = yield book_model_1.Book.find({ genre: filter })
-                .select("-updatedAt -description -createdAt")
+                .select("-updatedAt -createdAt")
                 .sort({
                 [sortBy]: sort === "ascending" || sort === "asc" || sort === "1" ? 1 : -1,
             })
@@ -49,13 +49,13 @@ const getBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             books = yield book_model_1.Book.find({
                 genre: { $regex: filter, $options: "i" },
             })
-                .select("-updatedAt -description -createdAt")
+                .select("-updatedAt  -createdAt")
                 .skip(skip)
                 .limit(limitNum);
         }
         else {
             books = yield book_model_1.Book.find()
-                .select("-updatedAt -description ")
+                .select("-updatedAt  ")
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limitNum);

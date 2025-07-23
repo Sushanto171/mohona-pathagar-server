@@ -31,26 +31,30 @@ A Library Management REST API built with **Express**, **TypeScript**, and **Mong
 
 ```
 src/
-├── book/
-│   ├── book.controllers.ts       # Controller functions for book routes
-│   ├── book.interfaces.ts        # TypeScript interfaces for Book model
-│   ├── book.model.ts             # Mongoose schema/model for Book
-│   └── book.routes.ts            # Book API route definitions
-│
-├── borrow/
-│   ├── borrow.controllers.ts     # Controller functions for borrow routes
-│   ├── borrow.interfaces.ts      # TypeScript interfaces for Borrow model
-│   ├── borrow.model.ts           # Mongoose schema/model for Borrow
-│   └── borrow.routes.ts          # Borrow API route definitions
-│
-├── config/
-│   └── index.ts                  # import env variables
-│
-├── routes/
-│   └── index.ts                  # Combines all routes
-│
-├── app.ts                        # Express app initialization
-└── server.ts                     # Server entry point
+  │  app/
+  │   │
+  │   ├── Middlewares/
+  │   │   ├──
+  │   ├── book/
+  │   │   ├── book.controllers.ts       # Controller functions for book routes
+  │   │   ├── book.interfaces.ts        # TypeScript interfaces for Book model
+  │   │   ├── book.model.ts             # Mongoose schema/model for Book
+  │   │   └── book.routes.ts            # Book API route definitions
+  │   │
+  │   ├── borrow/
+  │   │   ├── borrow.controllers.ts     # Controller functions for borrow routes
+  │   │   ├── borrow.interfaces.ts      # TypeScript interfaces for Borrow model
+  │   │   ├── borrow.model.ts           # Mongoose schema/model for Borrow
+  │   │   └── borrow.routes.ts          # Borrow API route definitions
+  │   │
+  │   ├── config/
+  │   │   └── index.ts                  # import env variables
+  │   │
+  │   ├── routes/
+  │       └── index.ts                  # Combines all routes
+  │
+  ├── app.ts                        # Express app initialization
+  └── server.ts                     # Server entry point
 ```
 
 ---

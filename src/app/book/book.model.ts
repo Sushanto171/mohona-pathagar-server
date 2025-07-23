@@ -1,7 +1,7 @@
 import { model, Schema, Types } from "mongoose";
+import { BookStaticMethod, IBook } from "./book.interfaces";
 import { IBorrow } from "../borrow/borrow.interfaces";
 import { Borrow } from "../borrow/borrow.model";
-import { BookStaticMethod, IBook } from "./book.interfaces";
 
 const bookSchema = new Schema<IBook, BookStaticMethod>(
   {

@@ -14,12 +14,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const app_1 = require("./app");
-const config_1 = __importDefault(require("./config"));
+const config_1 = __importDefault(require("./app/config"));
+let server;
 function bootstrap() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield mongoose_1.default.connect(config_1.default.database_url);
-            app_1.app.listen(config_1.default.port, () => {
+            server = app_1.app.listen(config_1.default.port, () => {
                 console.log(`✅ Server Running: http://localhost:${config_1.default.port} `);
             });
             console.log("⚡ Connection stabilized with database");
@@ -27,4 +28,28 @@ function bootstrap() {
         catch (error) { }
     });
 }
+process.on("unhandledRejection", () => {
+    if (server) {
+        server.close(() => {
+            process.exit(1);
+        });
+    }
+    process.exit(1);
+});
+process.on("uncaughtException", () => {
+    if (server) {
+        server.close(() => {
+            process.exit(1);
+        });
+    }
+    process.exit(1);
+});
+process.on("SIGTERM", () => {
+    if (server) {
+        server.close(() => {
+            process.exit(1);
+        });
+    }
+    process.exit(1);
+});
 bootstrap();
