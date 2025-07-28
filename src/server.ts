@@ -1,15 +1,15 @@
 import { Server } from "http";
 import mongoose from "mongoose";
 import { app } from "./app";
-import config from "./app/config";
+import { envVars } from "./app/config/envVars";
 
 let server: Server;
 
 async function bootstrap() {
   try {
-    await mongoose.connect(config.database_url!);
-    server = app.listen(config.port, () => {
-      console.log(`✅ Server Running: http://localhost:${config.port} `);
+    await mongoose.connect(envVars.DATABASE_URL!);
+    server = app.listen(envVars.PORT, () => {
+      console.log(`✅ Server Running: http://localhost:${envVars.PORT} `);
     });
     console.log("⚡ Connection stabilized with database");
   } catch (error) {}
