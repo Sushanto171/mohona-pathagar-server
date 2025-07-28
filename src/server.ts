@@ -1,18 +1,22 @@
+/* eslint-disable no-console */
 import { Server } from "http";
 import mongoose from "mongoose";
 import { app } from "./app";
-import config from "./app/config";
+import { envVars } from "./app/config/envVars";
+import { createSuperAdmin } from "./app/utils/speedSuperAdmin";
 
 let server: Server;
 
 async function bootstrap() {
   try {
-    await mongoose.connect(config.database_url!);
-    server = app.listen(config.port, () => {
-      console.log(`✅ Server Running: http://localhost:${config.port} `);
+    await mongoose.connect(envVars.DATABASE_URL);
+    server = app.listen(envVars.PORT, () => {
+      console.log(`✅ Server Running: http://localhost:${envVars.PORT} `);
     });
     console.log("⚡ Connection stabilized with database");
-  } catch (error) {}
+  } catch (error) {
+    console.log("Server", error);
+  }
 }
 
 process.on("unhandledRejection", () => {
@@ -42,4 +46,7 @@ process.on("SIGTERM", () => {
   process.exit(1);
 });
 
-bootstrap();
+(async () => {
+  await bootstrap();
+  await createSuperAdmin();
+})();
