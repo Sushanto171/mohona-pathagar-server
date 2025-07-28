@@ -14,8 +14,20 @@ const createUser = catchAsync(async (req, res) => {
   });
 });
 
+const updateUser = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const decoded = req.user;
+  const user = await userService.updateUser(id, req.body, decoded);
 
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    message: "Users updated successfully",
+    data: user,
+    success: true,
+  });
+});
 
 export const userController = {
   createUser,
+  updateUser,
 };
